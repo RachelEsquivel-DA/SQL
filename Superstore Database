@@ -50,3 +50,9 @@ WHERE category = 'Kitchen Supplies';
 SELECT item_name, category, price, MAX(average_rating)
 FROM superstore
 GROUP BY category;
+
+--5. What is the price range by department?
+SELECT category, MIN(price) AS lowest, MAX(price) AS highest
+FROM superstore
+GROUP BY category;
+
