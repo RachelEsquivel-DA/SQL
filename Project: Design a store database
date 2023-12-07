@@ -1,0 +1,69 @@
+--Create your own store! Your store should sell one type of things, like clothing or bikes, whatever you want your store to specialize in.
+You should have a table for all the items in your store, and at least 5 columns for the kind of data you think you'd need to store. 
+You should sell at least 15 items, and use select statements to order your items by price and show at least one statistic about the items.
+
+
+CREATE TABLE store (
+    id INTEGER PRIMARY KEY, 
+    item TEXT, 
+    inventory INTEGER, 
+    dept TEXT, 
+    price INTEGER
+);
+
+INSERT INTO store VALUES (1,"shirt",10,"apparel",9.99);
+INSERT INTO store VALUES (2,"sweater",6,"apparel",14.99);
+INSERT INTO store VALUES (3,"tank top",10,"apparel",4.99);
+INSERT INTO store VALUES (4,"dress",12,"apparel",19.99);
+INSERT INTO store VALUES (5,"pants",20,"apparel",24.99);
+INSERT INTO store VALUES (6,"belt",15,"accessories",9.99);
+INSERT INTO store VALUES (7,"hat",5,"accessories",4.99);
+INSERT INTO store VALUES (8,"sunglasses",10,"accessories",4.99);
+INSERT INTO store VALUES (9,"skirt",10,"apparel",14.99);
+INSERT INTO store VALUES (10,"sneakers",30,"shoes",29.99);
+INSERT INTO store VALUES (11,"boots",20,"shoes",49.99);
+INSERT INTO store VALUES (12,"sandals",20,"shoes",19.99);
+INSERT INTO store VALUES (13,"earrings",50,"accessories",2.99);
+INSERT INTO store VALUES (14,"purses",10,"accessories",14.99);
+INSERT INTO store VALUES (15,"leggings",10,"apparel",9.99);
+
+--display the database ordered by price.
+SELECT * 
+FROM store 
+ORDER BY price;
+
+--display the database ordered by dept and price.
+SELECT * 
+FROM store 
+ORDER BY dept, price;
+
+--how many items are in inventory and what is their average price?
+SELECT 
+    SUM(inventory) AS total_inventory
+    ,ROUND(AVG(price),2) AS avg_price 
+FROM store;
+
+--what items are available in the shoe section and list them by most expensive?
+SELECT * 
+FROM store
+WHERE dept = "shoes"
+ORDER BY price DESC;
+
+--what is the least expensive item from each section?
+SELECT 
+    item
+    ,inventory
+    ,dept
+    ,MIN(PRICE) 
+FROM store
+GROUP BY dept;
+
+--what are the top 5 most available items sold?
+SELECT 
+    item
+    ,inventory
+    ,dept
+    ,price
+FROM store
+ORDER BY inventory DESC
+LIMIT 5;
