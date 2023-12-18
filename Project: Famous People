@@ -1,0 +1,50 @@
+In this project, you’re going to make your own table with some small set of “famous people”, then make more tables about things they do and join those to create nice human readable lists.
+/* Create table about the people and what they do here */
+
+CREATE TABLE moviestars (id INTEGER PRIMARY KEY AUTOINCREMENT, fullname TEXT, age NUMERIC, married TEXT);
+
+INSERT INTO moviestars (fullname, age, married) VALUES ("Blake Lively", 36, "Yes");
+INSERT INTO moviestars (fullname, age, married) VALUES
+("Ryan Reynolds", 47, "Yes");
+INSERT INTO moviestars (fullname, age, married) VALUES
+("Eva Mendes", 49, "Yes");
+INSERT INTO moviestars (fullname, age, married) VALUES
+("Ryan Gosling", 43, "Yes");
+INSERT INTO moviestars (fullname, age, married) VALUES
+("Penelope Cruz", 49, "Yes");
+INSERT INTO moviestars (fullname, age, married) VALUES
+("Javier Bardem", 54, "Yes");
+
+
+CREATE TABLE movies (movie_id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, moviestar_id NUMERIC);
+
+INSERT INTO movies (title, moviestar_id) VALUES ("Age of Adeline", 1);
+INSERT INTO movies (title, moviestar_id) VALUES ("Deadpool", 2);
+INSERT INTO movies (title, moviestar_id) VALUES ("Drive", 4);
+INSERT INTO movies (title, moviestar_id) VALUES ("Hitch", 3);
+INSERT INTO movies (title, moviestar_id) VALUES ("Skyfall", 6);
+INSERT INTO movies (title, moviestar_id) VALUES ("Vanilla Sky", 5);
+
+
+CREATE TABLE celebcouples (couple_id INTEGER PRIMARY KEY AUTOINCREMENT, moviestar_id NUMERIC, spouse_id NUMERIC);
+
+INSERT INTO celebcouples (moviestar_id, spouse_id) VALUES (1,2);
+INSERT INTO celebcouples (moviestar_id, spouse_id) VALUES (3,4);
+INSERT INTO celebcouples (moviestar_id, spouse_id) VALUES (5,6);
+
+SELECT * FROM moviestars;
+
+--Show left join
+SELECT m.title AS movie, ms.fullname AS staring FROM movies m
+LEFT JOIN moviestars ms
+ON m.moviestar_id = ms.id
+;
+
+--Show a self join
+SELECT celebcouples.couple_id, a.fullname AS wife, b.fullname AS husband FROM celebcouples
+JOIN moviestars a
+ON celebcouples.moviestar_id = a.id
+JOIN moviestars b
+ON celebcouples.spouse_id = b.id;
+
+
