@@ -64,7 +64,6 @@ INSERT INTO co_stars (movie_id, moviestar_id, co_star_id) VALUES (1,1,16);
 
 SELECT * FROM moviestars;
 
-
 --Show left join
 SELECT m.title AS movie, ms.fullname AS staring FROM movies m
 LEFT JOIN moviestars ms
