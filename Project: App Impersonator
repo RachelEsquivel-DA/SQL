@@ -1,0 +1,35 @@
+/*Think about your favorite apps, and pick one that stores your data- like a game that stores scores, an app that lets you post updates, etc. Now in this project, you're going to imagine that the app stores your data in a SQL database (which is pretty likely!), and write SQL statements that might look like their own SQL.
+
+CREATE a table to store the data.
+INSERT a few example rows in the table.
+Use an UPDATE to emulate what happens when you edit data in the app.
+Use a DELETE to emulate what happens when you delete data in the app.
+
+/* What does the app's SQL look like? */
+
+CREATE TABLE fetch (receipt_id INTEGER PRIMARY KEY, date TEXT, store TEXT, receipt_total NUMERIC, fetch_points NUMERIC);
+
+INSERT INTO fetch (date, store, receipt_total, fetch_points) VALUES ("2023-12-1", "Amazon", 23.91, 25);
+INSERT INTO fetch (date, store, receipt_total, fetch_points) VALUES ("2023-12-1", "Jewel", 210.02, 100);
+INSERT INTO fetch (date, store, receipt_total, fetch_points) VALUES ("2023-12-2", "TJ Maxx", 54.89, 25);
+INSERT INTO fetch (date, store, receipt_total, fetch_points) VALUES ("2023-12-5", "Amazon", 30.94, 25);
+
+SELECT * FROM fetch;
+
+--Update a detail in the data and show the change.
+UPDATE fetch SET date = "2023-12-3" WHERE receipt_id = 4;
+
+SELECT * FROM fetch;
+
+--Alter the table by adding a column and show the change and default answer for missing data. 
+ALTER TABLE fetch ADD fetch_bonus NUMERIC DEFAULT "0";
+
+--Add new data for the table and include data for the new column added in the previous step.
+INSERT INTO fetch (date, store, receipt_total, fetch_points, fetch_bonus) VALUES ("2023-12-4", "Walmart", 132.49, 25, 150);
+
+SELECT * FROM fetch;
+
+--Delete one row of data without altering any other rows and show the change.
+DELETE FROM fetch WHERE receipt_id = 3;   
+
+SELECT * FROM fetch;
