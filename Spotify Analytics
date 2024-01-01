@@ -1,0 +1,119 @@
+# For this project, I downloaded Spotify data from Kaggle.
+# Then I created a table to insert Spotify data into.
+# Finally, I performed analytics on the data using SQL. 
+
+#Creating the table: 
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL 
+)
+
+#Then I inserted the Spotify Data .csv into the table.
+
+#Next, I explored the data using the following SQL. 
+
+SELECT * FROM BIT_DB.Spotifydata;
+
+#1. What are the top 10 songs based on popularity?
+Select artist_name
+     , track_name
+     , popularity
+FROM BIT_DB.Spotifydata
+ORDER BY popularity DESC
+LIMIT 10;
+
+
+#2. What is the avergae danceability of the top 10 most popular songs?
+SELECT AVG(danceability) AS avg_danceability
+FROM BIT_DB.Spotifydata
+WHERE track_name IN 
+(Select track_name
+FROM BIT_DB.Spotifydata
+ORDER BY popularity DESC
+LIMIT 10);
+
+
+#3. What are the top 10 quietest songs from the list?
+SELECT track_name
+    , artist_name
+    , loudness
+FROM BIT_DB.Spotifydata
+ORDER BY loudness 
+LIMIT 10;
+
+
+#4. Which artists shows up the most on the top 50 list?
+SELECT artist_name
+     , COUNT(*) AS appearance_count
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name
+ORDER BY appearance_count DESC
+LIMIT 5;
+
+
+#5. How danceability of the song influences its popularity?
+SELECT track_name
+     , artist_name
+     , danceability
+     , popularity
+ FROM BIT_DB.Spotifydata
+ GROUP BY popularity
+ ORDER BY danceability DESC;
+ 
+
+#6. Create a playlist of songs with High danceability and High energy to workout to. 
+SELECT track_name
+     , artist_name
+     , danceability
+     , energy
+FROM BIT_DB.Spotifydata
+WHERE danceability > 0.8
+AND energy > 0.8;
+
+
+#7. What is the average song length by artist?
+SELECT artist_name
+     , AVG(duration_ms) AS avg_duration
+FROM BIT_DB.Spotifydata
+GROUP BY artist_name
+ORDER BY avg_duration DESC;
+
+
+#8. Create a list of tracks that made the list by the same artist (use a self join).
+SELECT s1.artist_name
+     , s1.track_name AS track1
+     , s2.track_name AS track2
+FROM BIT_DB.Spotifydata s1
+JOIN BIT_DB.Spotifydata s2 
+ON s1.artist_name = s2.artist_name
+AND s1.track_id <> s2.track_id
+ORDER BY s1.artist_name;
+
+
+#9. Label songs by danceablilty using the case funtion.
+SELECT artist_name
+     , track_name
+     , danceability
+,CASE 
+    WHEN danceability >= 0.8 THEN 'High Danceabiliy'
+    WHEN danceability >= 0.5 THEN 'Med Danceability'
+    ELSE 'low Danceability'
+END AS danceability_level
+FROM BIT_DB.Spotifydata
+ORDER BY danceability_level, artist_name;
