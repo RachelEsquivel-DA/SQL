@@ -133,4 +133,5 @@ SELECT artist_name
      , avg_popularity
      , 'Top Star' AS tag
 FROM avg_popularity_CTE
-WHERE avg_popularity >= 90.0;
+WHERE avg_popularity >= 90.0
+ORDER BY avg_popularity DESC;
