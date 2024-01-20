@@ -96,7 +96,8 @@ ORDER BY avg_duration DESC;
 
 
 #8. Create a list of tracks that made the list by the same artist (use a self join).
-SELECT s1.artist_name
+SELECT DISTINCT 
+       s1.artist_name
      , s1.track_name AS track1
      , s2.track_name AS track2
 FROM BIT_DB.Spotifydata s1
