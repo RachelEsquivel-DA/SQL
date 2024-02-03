@@ -1,0 +1,153 @@
+#In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customers, music and order data. 
+
+
+#1. Which are the top 5 countries that place orders?
+SELECT Country
+     , COUNT(Country) AS Total_Orders
+FROM chinook.customers
+GROUP BY Country
+ORDER BY Count(Country) DESC
+LIMIT 5;
+
+
+#2. Which year was the busiest, with the most invoices?
+SELECT strftime('%Y', InvoiceDate) AS InvoiceYear
+     , COUNT(InvoiceId) AS NumberOfInvoices
+FROM chinook.invoices
+GROUP BY InvoiceYear
+ORDER BY NumberOfInvoices DESC
+       , InvoiceYear;
+
+
+#3. Which year had the best sales?
+SELECT strftime('%YY', InvoiceDate) AS SalesYear
+     , ROUND(SUM(Total), 2) AS TotalSales
+FROM chinook.invoices
+GROUP BY SalesYear
+ORDER BY TotalSales DESC;
+
+
+#4. Whch emplees are on the sales team?
+SELECT FirstName
+     , LastName
+     , Title
+FROM chinook.employees
+WHERE Title = "Sales Support Agent";
+
+
+#5. Which Sales Support Agent had the best sales in 2010?
+SELECT emp.FirstName
+     , emp.LastName
+     , ROUND(SUM(inv.Total), 2) AS Total_Sales
+ FROM chinook.employees emp
+ 
+JOIN chinook.customers cust
+ ON emp.EmployeeId = cust.SupportRepId
+
+JOIN chinook.invoices inv
+ON cust.CustomerId = inv.CustomerId
+
+WHERE emp.Title = 'Sales Support Agent'
+AND InvoiceDate LIKE '2010%'
+GROUP BY emp.FirstName
+ORDER BY Total_Sales DESC;
+
+
+#6. How many sales did each genre earn?
+SELECT g.Name AS Genre_Name
+     , ROUND(SUM(ii.UnitPrice * ii.Quantity), 2) AS Total_Sales
+FROM chinook.genres g
+
+INNER JOIN chinook.tracks t
+ON g.GenreId = t.GenreId
+
+INNER JOIN chinook.invoice_items ii
+ON t.TrackId = ii.TrackId
+
+INNER JOIN chinook.invoices i
+ON ii.InvoiceId = i.InvoiceId
+
+WHERE strftime('%Y', i.InvoiceDate) = '2010'
+GROUP BY  g.Name
+ORDER BY Total_Sales DESC;
+
+
+#7. List artists, albumms and their genres.
+SELECT DISTINCT a.Name AS Artist
+     , al.title AS Album
+     , g.Name AS Genre
+FROM chinook.artists a
+
+JOIN chinook.albums al
+ON al.ArtistId = a.ArtistId
+
+JOIN chinook.tracks t
+ON t.AlbumId = al.AlbumId
+
+JOIN chinook.genres g
+ON g.GenreId = t.GenreId;
+
+
+#8. How many repeat customers do we have?
+SELECT c.CustomerId
+     , c.FirstName
+     , c.LastName
+     , c.Country
+     , COUNT(i.InvoiceId) AS NumberOfInvoices
+FROM chinook.customers c
+
+JOIN chinook.invoices i
+ON c.CustomerId = i.CustomerId
+
+GROUP BY c.CustomerId
+       , c.FirstName
+       , c.LastName
+HAVING COUNT(i.InvoiceId) >= 2;
+
+
+#9. Rate the customers by low, medium and high spenders.
+SELECT CustomerId
+     , FirstName
+     , LastName
+     , TotalSpent
+, CASE
+    WHEN TotalSpent >= 40 THEN 'High Spender'
+    WHEN TotalSpent >= 35 THEN 'Medium Spender'
+    ELSE 'Low Spender'
+  END AS SpendingCategory
+FROM (
+    SELECT c.CustomerId
+         , c.FirstName
+         , c.LastName
+         , SUM(i.Total) AS TotalSpent
+    FROM chinook.customers c
+    
+    LEFT JOIN chinook.invoices i
+    ON c.CustomerId = i.CustomerId
+
+    GROUP BY c.CustomerId
+           , c.FirstName
+           , c.LastName
+) AS CustomerTotals;
+
+
+#10. Show pairs of songs in the same genre,
+ so that we may suggest to customers if you liked this one, you might also enjoy this one.
+SELECT t1.TrackId AS TrackId1
+     , t1.Name AS TrackName1
+     , t2.TrackId AS TrackId2
+     , t2.Name AS TrackName2
+     , g.Name AS Genre
+FROM chinook.tracks t1
+
+JOIN chinook.tracks t2
+ON t1.GenreId = t2.GenreId
+AND t1.TrackId < t2.TrackId
+
+JOIN chinook.genres g
+ON t1.GenreId = g.GenreId
+
+ORDER BY g.Name
+       , t1.TrackId
+       , t2.TrackId;
+
