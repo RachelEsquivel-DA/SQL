@@ -3,7 +3,7 @@
 
 This code repository contains examples of SQL I've written. Feel free to take a look and reach out if you have any questions.
 
-
+Here are some details about me:
  - 🏦 Strong background in Accounts Receivable and bookkeeping
  - 🔍 Data analysis | wrangling skills using Excel / SQL, with expertise in AutoML for SQL
  - 📊 Data visualization and storytelling skills using Tableau, check out my [portfolio](https://public.tableau.com/app/profile/rachel.esquivel/vizzes)
